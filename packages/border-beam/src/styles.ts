@@ -1544,10 +1544,12 @@ function fmtNum(v: number): string {
 
 // Convert an `rgb()` palette color into `rgba()` whose alpha is the live quadrant
 // opacity custom property, so the gradient breathes per-quadrant.
+// The blob keeps its own colour unless the host published --beam-tint, in which case
+// every blob switches to that colour and only the alpha ramp survives.
 function withAlphaVar(color: string, quad: PulseQuad, id: string): string {
   const m = color.match(/^rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/)
   const rgb = m ? `${m[1]}, ${m[2]}, ${m[3]}` : '255, 255, 255'
-  return `rgba(${rgb}, var(--bop-${quad}-${id}))`
+  return `color-mix(in srgb, var(--beam-tint, rgb(${rgb})) calc(var(--bop-${quad}-${id}) * 100%), transparent)`
 }
 
 function pulseGrad(
@@ -1608,7 +1610,7 @@ function pulseInnerGradients(
   ]
   const cornerGrads = corners.map(
     ([x, y, q]) =>
-      `radial-gradient(ellipse 60px 60px at ${x} ${y}, rgba(${cornerRGB}, calc(${cornerAlpha} * var(--bop-${q}-${id}))), transparent 70%)`,
+      `radial-gradient(ellipse 60px 60px at ${x} ${y}, color-mix(in srgb, var(--beam-tint, rgb(${cornerRGB})) calc(${cornerAlpha} * var(--bop-${q}-${id}) * 100%), transparent), transparent 70%)`,
   )
   return [...grads, ...cornerGrads].join(',\n    ')
 }
@@ -1663,7 +1665,7 @@ function pulseTableGradientsStatic(
       // the live stroke/core layers). The var only changes on resize, so the
       // blurred bloom bitmap is still painted once and cached between resizes.
       // Defaults to 1 (pulse-inner never sets it), leaving inner geometry as-is.
-      return `radial-gradient(ellipse calc(${e.w}px * var(--pulse-glow-sx, 1) * var(--pulse-glow-boost, 1)) calc(${e.h}px * var(--pulse-glow-sy, 1) * var(--pulse-glow-boost, 1)) at ${x} ${y}, rgba(${rgb}, ${a}), transparent)`
+      return `radial-gradient(ellipse calc(${e.w}px * var(--pulse-glow-sx, 1) * var(--pulse-glow-boost, 1)) calc(${e.h}px * var(--pulse-glow-sy, 1) * var(--pulse-glow-boost, 1)) at ${x} ${y}, color-mix(in srgb, var(--beam-tint, rgb(${rgb})) ${(a * 100).toFixed(1)}%, transparent), transparent)`
     })
     .join(',\n    ')
 }
