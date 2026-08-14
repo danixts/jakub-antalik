@@ -1,11 +1,11 @@
-import { defineConfig } from 'astro/config'
 import vue from '@astrojs/vue'
+import { defineConfig } from 'astro/config'
 import { fileURLToPath } from 'node:url'
 
 const repositoryName = process.env.GITHUB_REPOSITORY?.split('/')[1]
 const base =
   process.env.GITHUB_ACTIONS && repositoryName
-    ? `/${repositoryName}/beam/`
+    ? `/${repositoryName}/gooey/`
     : '/'
 
 export default defineConfig({
@@ -16,18 +16,21 @@ export default defineConfig({
     resolve: {
       alias: [
         {
-          find: '@danixts/border-beam/vue',
+          find: '@danixts/liquid-gooey/vue',
           replacement: fileURLToPath(
             new URL(
-              '../../packages/border-beam/src/vue/index.ts',
+              '../../packages/liquid-gooey/src/vue/index.ts',
               import.meta.url,
             ),
           ),
         },
         {
-          find: '@danixts/border-beam',
+          find: '@danixts/liquid-gooey',
           replacement: fileURLToPath(
-            new URL('../../packages/border-beam/src/index.ts', import.meta.url),
+            new URL(
+              '../../packages/liquid-gooey/src/index.ts',
+              import.meta.url,
+            ),
           ),
         },
       ],

@@ -1,271 +1,716 @@
 ---
+import '../../../shared/playground.css'
 import '../styles/global.css'
+import VueBeamDemo from '../components/VueBeamDemo.vue'
 
 export const prerender = true
 
-const specimens = [
+const variants = [
   {
-    size: 'sm',
+    label: 'Button · md',
+    size: 'md',
     color: 'colorful',
-    title: 'Small',
-    copy: 'Compact rotating glow for controls and badges.',
+    inset: 0,
+    kind: 'button',
   },
   {
+    label: 'Button · inset',
     size: 'md',
     color: 'ocean',
-    title: 'Medium',
-    copy: 'Balanced beam for cards and featured surfaces.',
+    inset: 5,
+    kind: 'button',
   },
+  { label: 'Icon · sm', size: 'sm', color: 'sunset', inset: 0, kind: 'icon' },
   {
+    label: 'Search · line',
     size: 'line',
     color: 'mono',
-    title: 'Line',
-    copy: 'A focused highlight travelling around the edge.',
+    inset: 2,
+    kind: 'search',
   },
   {
+    label: 'Pill · pulse inner',
     size: 'pulse-inner',
-    color: 'sunset',
-    title: 'Pulse inner',
-    copy: 'A breathing bloom contained inside the surface.',
+    color: 'ocean',
+    inset: 3,
+    kind: 'pill',
   },
   {
+    label: 'Card · pulse outside',
     size: 'pulse-outside',
     color: 'colorful',
-    title: 'Pulse outside',
-    copy: 'A soft pulse that expands beyond the boundary.',
+    inset: 0,
+    kind: 'card',
   },
   {
-    size: 'md',
-    color: 'colorful',
-    title: 'Colorful',
-    copy: 'The full-spectrum original palette.',
-  },
-  {
-    size: 'md',
-    color: 'ocean',
-    title: 'Ocean',
-    copy: 'Cool cyan and indigo for calm interfaces.',
-  },
-  {
+    label: 'Input · inset',
     size: 'md',
     color: 'sunset',
-    title: 'Sunset',
-    copy: 'Warm amber, coral, and violet tones.',
+    inset: 6,
+    kind: 'input',
   },
   {
-    size: 'md',
+    label: 'Badge · sm mono',
+    size: 'sm',
     color: 'mono',
-    title: 'Mono',
-    copy: 'A restrained neutral beam for quiet surfaces.',
+    inset: 2,
+    kind: 'pill',
+  },
+  {
+    label: 'Panel · deep inset',
+    size: 'md',
+    color: 'ocean',
+    inset: 10,
+    kind: 'card',
   },
 ] as const
+
+const installExamples = {
+  astro: `npm install @danixts/border-beam
+
+import { createBorderBeam } from '@danixts/border-beam'`,
+  vue: `npm install @danixts/border-beam vue
+
+import { BorderBeam } from '@danixts/border-beam/vue'`,
+} as const
 ---
 
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="Border Beam native TypeScript playground for Astro and Vue"
+    />
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%238b86ff'/%3E%3Cpath d='M18 17h18c9 0 14 5 14 12 0 5-3 9-8 11l9 7H39l-7-6h-3v6H18V17Zm11 9v7h7c2 0 4-1 4-4s-2-3-4-3h-7Z' fill='white'/%3E%3C/svg%3E"
     />
-    <meta
-      name="description"
-      content="Every framework-free Border Beam variant running in Astro"
-    />
-    <title>Border Beam playground · Astro</title>
+    <title>Border Beam playground</title>
   </head>
   <body>
-    <main>
+    <main class="app">
+      <nav class="top-links" aria-label="Project links">
+        <button
+          class="icon-button"
+          type="button"
+          data-theme-toggle
+          aria-label="Toggle theme"
+          title="Toggle theme"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            ><path
+              d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.4-6.4L17 7m-10 10-1.4 1.4m12.8 0L17 17M7 7 5.6 5.6"
+            ></path><circle cx="12" cy="12" r="4"></circle></svg
+          >
+        </button>
+        <a
+          class="icon-button"
+          href="https://github.com/danixts/jakub-antalik"
+          aria-label="GitHub"
+          title="GitHub"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor"
+            ><path
+              d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.58 9.58 0 0 1 12 7.68a9.5 9.5 0 0 1 2.5.34c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.86v2.9c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"
+            ></path></svg
+          >
+        </a>
+        <a
+          class="icon-button"
+          href="../gooey/"
+          aria-label="Liquid Gooey playground"
+          title="Liquid Gooey"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            ><circle cx="8" cy="12" r="4"></circle><circle cx="16" cy="12" r="3"
+            ></circle><path d="M11.5 10.5h2"></path></svg
+          >
+        </a>
+      </nav>
+
       <header class="hero">
-        <p class="eyebrow">Native browser controller · Astro</p>
-        <h1>Light that follows<br />the edge.</h1>
-        <p class="intro">
-          Every size, palette, and theme of the zero-dependency Border Beam
-          port. Astro owns the markup; one native controller owns each
-          decorative layer.
+        <div class="mark">
+          <svg
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            ><rect x="5" y="6" width="22" height="20" rx="6"></rect><path
+              d="M9 11h10m-10 5h14m-14 5h7"></path></svg>
+        </div>
+        <h1>Border beam</h1>
+        <p class="subtitle">
+          Animated borders for native TypeScript, Astro, and Vue.
         </p>
-        <nav aria-label="Project links">
-          <a href="https://www.npmjs.com/package/@danixts/border-beam">npm</a>
-          <a href="https://github.com/danixts/jakub-antalik">GitHub</a>
-          <a href="../gooey/">Liquid Gooey</a>
-        </nav>
+        <p class="author-note">
+          Original effect by <a href="https://github.com/Jakubantalik/Libraries"
+            >Jakub Antalik</a
+          > · independent native port
+        </p>
       </header>
 
-      <section class="control-panel" aria-label="Border Beam controls">
-        <div class="control-heading">
-          <span>Live controls</span>
-          <button type="button" data-toggle>Pause all</button>
-        </div>
-        <label>
-          Theme
-          <select data-theme>
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
-            <option value="auto">Auto</option>
-          </select>
-        </label>
-        <label>
-          Strength <output data-strength-output>0.85</output>
-          <input
-            data-strength
-            type="range"
-            min="0"
-            max="1"
-            step="0.05"
-            value="0.85"
-          />
-        </label>
-        <label>
-          Duration <output data-duration-output>6s</output>
-          <input
-            data-duration
-            type="range"
-            min="2"
-            max="16"
-            step="1"
-            value="6"
-          />
-        </label>
-        <label class="check-control">
-          <input data-static type="checkbox" /> Static colors
-        </label>
-      </section>
+      <nav class="segmented family-tabs" aria-label="Effect family">
+        <button type="button" data-family="rotate" aria-selected="true"
+          >Rotate</button
+        >
+        <button type="button" data-family="pulse" aria-selected="false"
+          >Pulse</button
+        >
+        <button type="button" data-family="inset" aria-selected="false"
+          >Inset</button
+        >
+      </nav>
 
-      <div class="section-title">
-        <span>01</span>
-        <h2>Size variants</h2>
-        <p>sm · md · line · pulse-inner · pulse-outside</p>
-      </div>
-      <section class="grid" aria-label="Border Beam size and color variants">
-        {
-          specimens.map((specimen, index) => (
-            <article
-              class="beam-host"
-              data-beam-host
-              data-size={specimen.size}
-              data-color={specimen.color}
-            >
-              <div class="card">
-                <div class="card-meta">
-                  <span>0{index + 1}</span>
-                  <code>{specimen.size}</code>
-                </div>
-                <div>
-                  <p class="palette">{specimen.color}</p>
-                  <h3>{specimen.title}</h3>
-                  <p>{specimen.copy}</p>
+      <section class="example-stack" aria-label="Border Beam examples">
+        <div data-family-panel="rotate">
+          <div class="example-stack">
+            <div class="example-cell example-cell--large">
+              <div
+                class="beam-host"
+                data-beam-demo
+                data-size="md"
+                data-color="colorful"
+              >
+                <div class="mock-chat">
+                  <input
+                    aria-label="Prompt"
+                    placeholder="Build anything..."
+                  /><div class="mock-chat-bottom">
+                    <span class="mock-chip">Agent</span><span class="mock-chip"
+                      >Auto</span
+                    ><button class="mock-action" type="button" aria-label="Send"
+                      >↑</button>
+                  </div>
                 </div>
               </div>
-            </article>
-          ))
-        }
+            </div>
+            <div class="example-grid">
+              <div class="example-cell">
+                <div
+                  class="beam-host"
+                  data-beam-demo
+                  data-size="sm"
+                  data-color="sunset"
+                >
+                  <button class="mock-button mock-button--round" type="button"
+                    >+</button>
+                </div>
+              </div>
+              <div class="example-cell">
+                <div
+                  class="beam-host beam-host--wide"
+                  data-beam-demo
+                  data-size="line"
+                  data-color="ocean"
+                >
+                  <input
+                    class="mock-search"
+                    aria-label="Search"
+                    placeholder="Search components"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-family-panel="pulse" hidden>
+          <div class="example-stack">
+            <div class="example-cell example-cell--large">
+              <div
+                class="beam-host beam-host--card"
+                data-beam-demo
+                data-size="pulse-inner"
+                data-color="colorful"
+              >
+                <div class="mock-card">
+                  <strong>Generating interface</strong><span
+                    >Building accessible components...</span>
+                </div>
+              </div>
+            </div>
+            <div class="example-grid">
+              <div class="example-cell">
+                <div
+                  class="beam-host"
+                  data-beam-demo
+                  data-size="pulse-inner"
+                  data-color="sunset"
+                >
+                  <button class="mock-button mock-button--pill" type="button"
+                    >Subscribe</button>
+                </div>
+              </div>
+              <div class="example-cell">
+                <div
+                  class="beam-host"
+                  data-beam-demo
+                  data-size="pulse-outside"
+                  data-color="ocean"
+                >
+                  <button class="mock-button" type="button"
+                    >Create project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-family-panel="inset" hidden>
+          <div class="example-stack">
+            <div class="example-cell example-cell--large">
+              <div
+                class="beam-host beam-host--card"
+                data-beam-demo
+                data-size="md"
+                data-color="ocean"
+                data-inset="8"
+              >
+                <div class="mock-card">
+                  <strong>Inset surface</strong><span
+                    >The beam follows an inner boundary without changing your
+                    component.</span>
+                </div>
+              </div>
+            </div>
+            <div class="example-grid">
+              <div class="example-cell">
+                <div
+                  class="beam-host"
+                  data-beam-demo
+                  data-size="sm"
+                  data-color="colorful"
+                  data-inset="4"
+                >
+                  <button class="mock-button mock-button--round" type="button"
+                    >⌘</button>
+                </div>
+              </div>
+              <div class="example-cell">
+                <div
+                  class="beam-host beam-host--wide"
+                  data-beam-demo
+                  data-size="line"
+                  data-color="sunset"
+                  data-inset="5"
+                >
+                  <input
+                    class="mock-search"
+                    aria-label="Email"
+                    placeholder="name@company.com"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <section class="api-note">
-        <span>One API</span>
-        <code>createBorderBeam(element, options)</code>
-        <p>
-          Works in an Astro processed script or any Vue lifecycle hook. Every
-          controller can update, pause, resume, and destroy independently.
-        </p>
+      <section class="section" aria-labelledby="installation-title">
+        <div class="section-heading">
+          <h2 id="installation-title">Installation</h2><div
+            class="segmented"
+            data-code-tabs
+          >
+            <button type="button" data-code-target="astro" aria-selected="true"
+              >Astro</button
+            ><button type="button" data-code-target="vue" aria-selected="false"
+              >Vue</button>
+          </div>
+        </div>
+        <div class="code-block">
+          <pre data-code="astro">{installExamples.astro}</pre><pre
+            data-code="vue"
+            hidden>{installExamples.vue}</pre><button
+            class="copy-button"
+            type="button"
+            data-copy
+            aria-label="Copy code"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              ><rect x="8" y="8" width="11" height="11" rx="2"></rect><path
+                d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"
+              ></path></svg
+            ></button>
+        </div>
       </section>
 
-      <footer>
-        Original effect by
-        <a href="https://github.com/Jakubantalik/Libraries">Jakub Antalik</a>.
-        Independent native port for Astro and Vue.
+      <section class="section" aria-labelledby="playground-title">
+        <div class="section-heading">
+          <h2 id="playground-title">Playground</h2><p>
+            Every option updates one controller
+          </p>
+        </div>
+        <div class="controls" data-playground-controls>
+          <div class="control-row">
+            <span class="control-label">Type</span><div
+              class="control-options"
+              data-option="size"
+            >
+              {
+                ['sm', 'md', 'line', 'pulse-inner', 'pulse-outside'].map(
+                  (value) => (
+                    <button
+                      type="button"
+                      data-value={value}
+                      data-active={value === 'md'}
+                    >
+                      {value}
+                    </button>
+                  ),
+                )
+              }
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">Color</span><div
+              class="control-options"
+              data-option="colorVariant"
+            >
+              {
+                ['colorful', 'mono', 'ocean', 'sunset'].map((value) => (
+                  <button
+                    type="button"
+                    data-value={value}
+                    data-active={value === 'colorful'}
+                  >
+                    {value}
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+          <label class="control-row"
+            ><span class="control-label">Strength</span><span
+              class="range-control"
+              ><input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value="0.8"
+                data-range="strength"
+              /><output>0.80</output></span
+            ></label
+          >
+          <label class="control-row"
+            ><span class="control-label">Inset</span><span class="range-control"
+              ><input
+                type="range"
+                min="0"
+                max="16"
+                step="1"
+                value="0"
+                data-range="inset"
+              /><output>0px</output></span
+            ></label
+          >
+          <label class="control-row"
+            ><span class="control-label">Duration</span><span
+              class="range-control"
+              ><input
+                type="range"
+                min="1"
+                max="12"
+                step="0.5"
+                value="4"
+                data-range="duration"
+              /><output>4s</output></span
+            ></label
+          >
+        </div>
+        <div class="playground-preview">
+          <div class="preview-surface">
+            <div class="beam-host beam-host--preview" data-playground-beam>
+              <div class="mock-chat">
+                <input
+                  aria-label="Interactive prompt"
+                  placeholder="Ask the playground..."
+                /><div class="mock-chat-bottom">
+                  <span class="mock-chip">Astro</span><span class="mock-chip"
+                    >TypeScript</span
+                  ><button class="mock-action" type="button">↑</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="preview-toolbar">
+            <button
+              class="preview-toggle"
+              type="button"
+              data-play-toggle
+              aria-label="Pause animation"
+              ><svg viewBox="0 0 24 24" fill="currentColor"
+                ><path d="M7 5h4v14H7zm6 0h4v14h-4z"></path></svg
+              ></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="variants-title">
+        <div class="section-heading">
+          <h2 id="variants-title">Component variants</h2><p>
+            Real buttons, inputs, pills, and cards
+          </p>
+        </div>
+        <div class="variant-grid">
+          {
+            variants.map((variant) => (
+              <div>
+                <>
+                  <div class="variant-card">
+                    <div
+                      class="beam-host variant-host"
+                      data-beam-demo
+                      data-size={variant.size}
+                      data-color={variant.color}
+                      data-inset={variant.inset}
+                    >
+                      {variant.kind === 'icon' ? (
+                        <button
+                          class="mock-button mock-button--round"
+                          type="button"
+                        >
+                          +
+                        </button>
+                      ) : variant.kind === 'search' ||
+                        variant.kind === 'input' ? (
+                        <input
+                          class="mock-search"
+                          aria-label={variant.label}
+                          placeholder={
+                            variant.kind === 'search'
+                              ? 'Search'
+                              : 'Email address'
+                          }
+                        />
+                      ) : variant.kind === 'card' ? (
+                        <div class="mock-card">
+                          <strong>Minimal card</strong>
+                          <span>Reusable surface</span>
+                        </div>
+                      ) : (
+                        <button
+                          class:list={[
+                            'mock-button',
+                            variant.kind === 'pill' && 'mock-button--pill',
+                          ]}
+                          type="button"
+                        >
+                          {variant.kind === 'pill' ? 'Status' : 'Continue'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <p class="variant-label">{variant.label}</p>
+                </>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="integration-title">
+        <div class="section-heading">
+          <h2 id="integration-title">Native Astro and Vue</h2><p>
+            One engine, two typed integrations
+          </p>
+        </div>
+        <div class="integration-grid">
+          <article class="integration-card">
+            <h3>Astro</h3><p>
+              A processed TypeScript script mounts the native controller. No
+              framework runtime required.
+            </p>
+          </article><article class="integration-card">
+            <h3>Vue 3</h3><p>
+              The official component maps reactive props and destroys its
+              controller on unmount.
+            </p>
+          </article>
+        </div>
+        <div class="vue-surface"><VueBeamDemo client:visible /></div>
+      </section>
+
+      <footer class="footer">
+        Independent TypeScript port · Original Border Beam by <a
+          href="https://github.com/Jakubantalik/Libraries">Jakub Antalik</a>
       </footer>
     </main>
 
     <script>
-      import { createBorderBeam } from '@danixts/border-beam'
-      import type {
-        BorderBeamColorVariant,
-        BorderBeamController,
-        BorderBeamSize,
-        BorderBeamTheme,
+      import {
+        createBorderBeam,
+        type BorderBeamColorVariant,
+        type BorderBeamController,
+        type BorderBeamOptions,
+        type BorderBeamSize,
+        type BorderBeamTheme,
       } from '@danixts/border-beam'
 
       let controllers: BorderBeamController[] = []
+      let playground: BorderBeamController | undefined
+      let abort: AbortController | undefined
       let active = true
+      let theme: BorderBeamTheme = 'dark'
 
-      function updateAll(
-        options: Parameters<BorderBeamController['update']>[0],
-      ): void {
-        controllers.forEach((controller) => controller.update(options))
-      }
-
-      function mount(): void {
+      const mount = (): void => {
+        abort?.abort()
+        abort = new AbortController()
+        const { signal } = abort
         controllers.forEach((controller) => controller.destroy())
+        playground?.destroy()
+
         controllers = Array.from(
-          document.querySelectorAll<HTMLElement>('[data-beam-host]'),
+          document.querySelectorAll<HTMLElement>('[data-beam-demo]'),
         ).map((element) =>
           createBorderBeam(element, {
             size: element.dataset.size as BorderBeamSize,
             colorVariant: element.dataset.color as BorderBeamColorVariant,
-            theme: 'dark',
-            duration: 6,
-            strength: 0.85,
+            inset: Number(element.dataset.inset ?? 0),
+            strength: 0.82,
+            theme,
           }),
         )
 
-        document
-          .querySelector<HTMLInputElement>('[data-strength]')
-          ?.addEventListener('input', (event) => {
-            const value = Number(
-              (event.currentTarget as HTMLInputElement).value,
+        const preview = document.querySelector<HTMLElement>(
+          '[data-playground-beam]',
+        )
+        if (preview)
+          playground = createBorderBeam(preview, {
+            size: 'md',
+            colorVariant: 'colorful',
+            strength: 0.8,
+            duration: 4,
+            theme,
+          })
+
+        document.addEventListener(
+          'click',
+          (event) => {
+            const target =
+              event.target instanceof Element
+                ? event.target.closest<HTMLButtonElement>('button')
+                : null
+            if (!target) return
+
+            if (target.dataset.family) {
+              document
+                .querySelectorAll<HTMLButtonElement>('[data-family]')
+                .forEach((button) =>
+                  button.setAttribute(
+                    'aria-selected',
+                    String(button === target),
+                  ),
+                )
+              document
+                .querySelectorAll<HTMLElement>('[data-family-panel]')
+                .forEach((panel) => {
+                  panel.hidden =
+                    panel.dataset.familyPanel !== target.dataset.family
+                })
+            }
+
+            if (target.dataset.codeTarget) {
+              document
+                .querySelectorAll<HTMLButtonElement>('[data-code-target]')
+                .forEach((button) =>
+                  button.setAttribute(
+                    'aria-selected',
+                    String(button === target),
+                  ),
+                )
+              document
+                .querySelectorAll<HTMLElement>('[data-code]')
+                .forEach((code) => {
+                  code.hidden = code.dataset.code !== target.dataset.codeTarget
+                })
+            }
+
+            const option =
+              target.closest<HTMLElement>('[data-option]')?.dataset.option
+            if (option && target.dataset.value) {
+              target.parentElement
+                ?.querySelectorAll<HTMLButtonElement>('button')
+                .forEach((button) => {
+                  button.dataset.active = String(button === target)
+                })
+              playground?.update({
+                [option]: target.dataset.value,
+              } as Partial<BorderBeamOptions>)
+            }
+
+            if (target.matches('[data-play-toggle]')) {
+              active = !active
+              playground?.update({ active })
+              target.setAttribute(
+                'aria-label',
+                active ? 'Pause animation' : 'Play animation',
+              )
+            }
+
+            if (target.matches('[data-theme-toggle]')) {
+              theme = theme === 'dark' ? 'light' : 'dark'
+              document.documentElement.dataset.theme = theme
+              controllers.forEach((controller) => controller.update({ theme }))
+              playground?.update({ theme })
+            }
+
+            if (target.matches('[data-copy]')) {
+              const text = target.parentElement?.querySelector<HTMLElement>(
+                '[data-code]:not([hidden])',
+              )?.textContent
+              if (text) void navigator.clipboard.writeText(text)
+            }
+          },
+          { signal },
+        )
+
+        document.addEventListener(
+          'input',
+          (event) => {
+            if (
+              !(event.target instanceof HTMLInputElement) ||
+              !event.target.dataset.range
             )
-            const output = document.querySelector<HTMLOutputElement>(
-              '[data-strength-output]',
-            )
-            if (output) output.value = value.toFixed(2)
-            updateAll({ strength: value })
-          })
-        document
-          .querySelector<HTMLInputElement>('[data-duration]')
-          ?.addEventListener('input', (event) => {
-            const value = Number(
-              (event.currentTarget as HTMLInputElement).value,
-            )
-            const output = document.querySelector<HTMLOutputElement>(
-              '[data-duration-output]',
-            )
-            if (output) output.value = `${value}s`
-            updateAll({ duration: value })
-          })
-        document
-          .querySelector<HTMLSelectElement>('[data-theme]')
-          ?.addEventListener('change', (event) => {
-            const theme = (event.currentTarget as HTMLSelectElement)
-              .value as BorderBeamTheme
-            document.documentElement.dataset.theme = theme
-            updateAll({ theme })
-          })
-        document
-          .querySelector<HTMLInputElement>('[data-static]')
-          ?.addEventListener('change', (event) => {
-            updateAll({
-              staticColors: (event.currentTarget as HTMLInputElement).checked,
-            })
-          })
-        document
-          .querySelector<HTMLButtonElement>('[data-toggle]')
-          ?.addEventListener('click', (event) => {
-            active = !active
-            updateAll({ active })
-            ;(event.currentTarget as HTMLButtonElement).textContent = active
-              ? 'Pause all'
-              : 'Play all'
-          })
+              return
+            const key = event.target.dataset.range
+            const value = Number(event.target.value)
+            const output =
+              event.target.parentElement?.querySelector<HTMLOutputElement>(
+                'output',
+              )
+            if (output)
+              output.value =
+                key === 'strength'
+                  ? value.toFixed(2)
+                  : key === 'inset'
+                    ? `${value}px`
+                    : `${value}s`
+            playground?.update({ [key]: value } as Partial<BorderBeamOptions>)
+          },
+          { signal },
+        )
       }
 
       mount()
       document.addEventListener(
         'astro:before-swap',
         () => {
+          abort?.abort()
           controllers.forEach((controller) => controller.destroy())
-          controllers = []
+          playground?.destroy()
         },
         { once: true },
       )

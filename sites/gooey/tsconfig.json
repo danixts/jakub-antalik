@@ -1,12 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
-    "types": ["vite/client", "node"],
-    "paths": {
-      "@danixts/border-beam": ["../../packages/border-beam/src/index.ts"],
-      "@danixts/liquid-gooey": ["../../packages/liquid-gooey/src/index.ts"]
-    }
-  },
-  "include": ["src/**/*.ts", "src/**/*.vue", "vite.config.ts"]
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"]
 }
