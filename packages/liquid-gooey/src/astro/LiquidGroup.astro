@@ -1,0 +1,74 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import type { LiquidGroupOptions } from '../types'
+
+export type Props = LiquidGroupOptions &
+  HTMLAttributes<'div'> & {
+    as?: keyof HTMLElementTagNameMap
+  }
+
+const {
+  as: Tag = 'div',
+  blur,
+  contrast,
+  fill,
+  filterPadding,
+  shadow,
+  ...attributes
+} = Astro.props
+
+const options: LiquidGroupOptions = {
+  blur,
+  contrast,
+  fill,
+  filterPadding,
+  shadow,
+}
+---
+
+<Tag {...attributes} data-astro-liquid-group={JSON.stringify(options)}>
+  <slot />
+</Tag>
+
+<script>
+  import {
+    createLiquidGroup,
+    type LiquidGroupController,
+    type LiquidGroupOptions,
+    type LiquidItemOptions,
+  } from '@danixts/liquid-gooey'
+
+  const controllers = new Map<HTMLElement, LiquidGroupController>()
+
+  const mountLiquidGroups = (): void => {
+    document
+      .querySelectorAll<HTMLElement>('[data-astro-liquid-group]')
+      .forEach((element) => {
+        if (controllers.has(element)) return
+        const serialized = element.dataset.astroLiquidGroup
+        if (!serialized) return
+
+        const options = JSON.parse(serialized) as LiquidGroupOptions
+        const group = createLiquidGroup(element, options)
+        element
+          .querySelectorAll<HTMLElement>('[data-astro-liquid-item]')
+          .forEach((item) => {
+            if (item.closest('[data-astro-liquid-group]') !== element) return
+            const itemOptions = JSON.parse(
+              item.dataset.astroLiquidItem ?? '{}',
+            ) as LiquidItemOptions
+            group.add(item, itemOptions)
+          })
+        controllers.set(element, group)
+      })
+  }
+
+  const destroyLiquidGroups = (): void => {
+    controllers.forEach((controller) => controller.destroy())
+    controllers.clear()
+  }
+
+  mountLiquidGroups()
+  document.addEventListener('astro:page-load', mountLiquidGroups)
+  document.addEventListener('astro:before-swap', destroyLiquidGroups)
+</script>

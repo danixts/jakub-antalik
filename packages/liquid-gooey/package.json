@@ -1,6 +1,6 @@
 {
   "name": "@danixts/liquid-gooey",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Framework-free liquid UI effects for Astro and Vue",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -16,10 +16,16 @@
       "types": "./dist/vue/index.d.ts",
       "import": "./dist/vue/index.js",
       "require": "./dist/vue/index.cjs"
+    },
+    "./astro": {
+      "types": "./src/astro/index.ts",
+      "default": "./src/astro/index.ts"
     }
   },
   "files": [
     "dist",
+    "src/astro",
+    "src/astro-modules.d.ts",
     "LICENSE",
     "README.md"
   ],
@@ -29,14 +35,19 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "astro": "^7.2.2",
     "tsup": "^8.5.0",
     "typescript": "^6.0.3",
     "vue": "^3.5.41"
   },
   "peerDependencies": {
+    "astro": ">=5.0.0 <8",
     "vue": ">=3.5.0 <4"
   },
   "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    },
     "vue": {
       "optional": true
     }

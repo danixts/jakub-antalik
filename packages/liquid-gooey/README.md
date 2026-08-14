@@ -57,7 +57,22 @@ import { LiquidGroup, LiquidItem } from '@danixts/liquid-gooey/vue'
 
 ## Astro
 
-Call `createLiquidGroup()` from a processed TypeScript `<script>`, add descendants after the DOM exists, and destroy the group on `astro:before-swap` when using view transitions.
+```astro
+---
+import { LiquidGroup, LiquidItem } from '@danixts/liquid-gooey/astro'
+---
+
+<LiquidGroup class="group" blur={8} contrast={18} fill="#8b5cf6">
+  <LiquidItem as="button" x={-52} transition="bouncy" type="button">
+    One
+  </LiquidItem>
+  <LiquidItem as="button" x={52} transition="bouncy" type="button">
+    Two
+  </LiquidItem>
+</LiquidGroup>
+```
+
+The Astro group discovers its declarative items, creates one isolated native controller, and cleans up automatically during view transitions.
 
 ## Credits
 

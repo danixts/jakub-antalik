@@ -1,0 +1,45 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import type { LiquidItemOptions } from '../types'
+
+type HostAttributes = HTMLAttributes<'div'> & {
+  type?: 'button' | 'reset' | 'submit'
+}
+
+export type Props = LiquidItemOptions &
+  HostAttributes & {
+    as?: keyof HTMLElementTagNameMap
+  }
+
+const {
+  as: Tag = 'div',
+  delay,
+  dissolve,
+  effect,
+  morph,
+  move,
+  radius,
+  scale,
+  transition,
+  x,
+  y,
+  ...attributes
+} = Astro.props
+
+const options: LiquidItemOptions = {
+  delay,
+  dissolve,
+  effect,
+  morph,
+  move,
+  radius,
+  scale,
+  transition,
+  x,
+  y,
+}
+---
+
+<Tag {...attributes} data-astro-liquid-item={JSON.stringify(options)}>
+  <slot />
+</Tag>

@@ -1,0 +1,82 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import type { BorderBeamOptions } from '../types'
+
+type HostAttributes = HTMLAttributes<'div'> & {
+  type?: 'button' | 'reset' | 'submit'
+}
+
+export type Props = BorderBeamOptions &
+  HostAttributes & {
+    as?: keyof HTMLElementTagNameMap
+  }
+
+const {
+  as: Tag = 'div',
+  active,
+  borderRadius,
+  brightness,
+  colorVariant,
+  duration,
+  hairlineOpacity,
+  hueRange,
+  inset,
+  saturation,
+  size,
+  staticColors,
+  strength,
+  theme,
+  ...attributes
+} = Astro.props
+
+const options: BorderBeamOptions = {
+  active,
+  borderRadius,
+  brightness,
+  colorVariant,
+  duration,
+  hairlineOpacity,
+  hueRange,
+  inset,
+  saturation,
+  size,
+  staticColors,
+  strength,
+  theme,
+}
+---
+
+<Tag {...attributes} data-astro-border-beam={JSON.stringify(options)}>
+  <slot />
+</Tag>
+
+<script>
+  import {
+    createBorderBeam,
+    type BorderBeamController,
+    type BorderBeamOptions,
+  } from '@danixts/border-beam'
+
+  const controllers = new Map<HTMLElement, BorderBeamController>()
+
+  const mountBorderBeams = (): void => {
+    document
+      .querySelectorAll<HTMLElement>('[data-astro-border-beam]')
+      .forEach((element) => {
+        if (controllers.has(element)) return
+        const serialized = element.dataset.astroBorderBeam
+        if (!serialized) return
+        const options = JSON.parse(serialized) as BorderBeamOptions
+        controllers.set(element, createBorderBeam(element, options))
+      })
+  }
+
+  const destroyBorderBeams = (): void => {
+    controllers.forEach((controller) => controller.destroy())
+    controllers.clear()
+  }
+
+  mountBorderBeams()
+  document.addEventListener('astro:page-load', mountBorderBeams)
+  document.addEventListener('astro:before-swap', destroyBorderBeams)
+</script>

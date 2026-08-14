@@ -15,7 +15,7 @@ Framework-free ports of Jakub Antalik's **Border Beam** and **Liquid Gooey**, de
 npm install @danixts/border-beam @danixts/liquid-gooey
 ```
 
-Both packages expose small DOM controllers with independent state, reactive `update()` methods, and deterministic `destroy()` cleanup. They can be imported during SSR because browser work starts only when a controller is created. First-class Vue 3 components are available from each package's `/vue` export.
+Both packages expose small DOM controllers with independent state, reactive `update()` methods, and deterministic `destroy()` cleanup. They can be imported during SSR because browser work starts only when a controller is created. First-class components are available from the `/astro` and `/vue` exports.
 
 ## Development
 

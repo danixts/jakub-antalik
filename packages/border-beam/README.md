@@ -39,19 +39,16 @@ The host remains your element. The controller adds one decorative layer, support
 ## Astro
 
 ```astro
-<div data-beam>Content</div>
+---
+import { BorderBeam } from '@danixts/border-beam/astro'
+---
 
-<script>
-  import { createBorderBeam } from '@danixts/border-beam'
-
-  const host = document.querySelector<HTMLElement>('[data-beam]')
-  const beam = host ? createBorderBeam(host, { size: 'md' }) : undefined
-
-  document.addEventListener('astro:before-swap', () => beam?.destroy(), {
-    once: true,
-  })
-</script>
+<BorderBeam as="button" size="md" colorVariant="ocean" inset={4} type="button">
+  Continue
+</BorderBeam>
 ```
+
+The Astro component mounts the native controller, supports multiple independent instances, and cleans up automatically during view transitions.
 
 ## Vue 3
 
