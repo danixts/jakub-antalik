@@ -166,7 +166,8 @@ h1 {
 }
 .example-cell,
 .preview-surface,
-.vue-surface {
+.vue-surface,
+.astro-surface {
   position: relative;
   min-height: 190px;
   display: grid;
@@ -350,6 +351,17 @@ h1 {
   min-height: 240px;
   margin-top: 10px;
 }
+.framework-demos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+.framework-demos .vue-surface,
+.framework-demos .astro-surface {
+  min-height: 240px;
+  margin-top: 0;
+}
 .footer {
   margin-top: 64px;
   padding-top: 20px;
@@ -468,7 +480,8 @@ h1 {
   }
   .example-grid,
   .variant-grid,
-  .integration-grid {
+  .integration-grid,
+  .framework-demos {
     grid-template-columns: 1fr;
   }
   .control-row {

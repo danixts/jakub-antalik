@@ -16,6 +16,15 @@ export default defineConfig({
     resolve: {
       alias: [
         {
+          find: '@danixts/liquid-gooey/astro',
+          replacement: fileURLToPath(
+            new URL(
+              '../../packages/liquid-gooey/src/astro/index.ts',
+              import.meta.url,
+            ),
+          ),
+        },
+        {
           find: '@danixts/liquid-gooey/vue',
           replacement: fileURLToPath(
             new URL(

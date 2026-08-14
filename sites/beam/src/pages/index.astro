@@ -1,6 +1,7 @@
 ---
 import '../../../shared/playground.css'
 import '../styles/global.css'
+import { BorderBeam as AstroBorderBeam } from '@danixts/border-beam/astro'
 import VueBeamDemo from '../components/VueBeamDemo.vue'
 
 export const prerender = true
@@ -68,7 +69,9 @@ const variants = [
 const installExamples = {
   astro: `npm install @danixts/border-beam
 
-import { createBorderBeam } from '@danixts/border-beam'`,
+import { BorderBeam } from '@danixts/border-beam/astro'
+
+<BorderBeam as="button" size="md">Continue</BorderBeam>`,
   vue: `npm install @danixts/border-beam vue
 
 import { BorderBeam } from '@danixts/border-beam/vue'`,
@@ -134,6 +137,21 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
             stroke-width="1.7"
             ><circle cx="8" cy="12" r="4"></circle><circle cx="16" cy="12" r="3"
             ></circle><path d="M11.5 10.5h2"></path></svg
+          >
+        </a>
+        <a
+          class="icon-button"
+          href="https://danixts.github.io/sileo-vue/"
+          aria-label="Sileo Vue playground"
+          title="Sileo Vue"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            ><rect x="3" y="7" width="18" height="6" rx="3"></rect><path
+              d="M6 16h12"></path><path d="M9 20h6"></path></svg
           >
         </a>
       </nav>
@@ -528,6 +546,84 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
         </div>
       </section>
 
+      <section class="section" aria-labelledby="beam-forms-title">
+        <div class="section-heading">
+          <h2 id="beam-forms-title">Form controls</h2><p>
+            The beam follows each real control boundary
+          </p>
+        </div>
+        <div class="beam-form-grid">
+          <label
+            class="beam-control"
+            data-beam-demo
+            data-size="md"
+            data-color="ocean"
+          >
+            <input type="text" placeholder="Workspace name" />
+          </label>
+          <label
+            class="beam-control"
+            data-beam-demo
+            data-size="line"
+            data-color="sunset"
+          >
+            <select aria-label="Environment">
+              <option>Production</option>
+              <option>Staging</option>
+            </select>
+          </label>
+          <button
+            class="beam-switch"
+            data-beam-demo
+            data-size="sm"
+            data-color="colorful"
+            data-beam-switch
+            type="button"
+            role="switch"
+            aria-checked="false"
+          >
+            <span></span><strong>Off</strong>
+          </button>
+          <label
+            class="beam-control beam-range"
+            data-beam-demo
+            data-size="pulse-inner"
+            data-color="ocean"
+          >
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="58"
+              data-beam-range
+            /><output>58</output>
+          </label>
+          <div
+            class="beam-control beam-number"
+            data-beam-demo
+            data-size="md"
+            data-color="sunset"
+            data-inset="3"
+          >
+            <button type="button" data-beam-step="-1" aria-label="Decrease"
+              >−</button
+            ><output data-beam-number>4</output><button
+              type="button"
+              data-beam-step="1"
+              aria-label="Increase">+</button
+            >
+          </div>
+          <label
+            class="beam-control beam-textarea"
+            data-beam-demo
+            data-size="pulse-outside"
+            data-color="mono"
+          >
+            <textarea aria-label="Notes" placeholder="Add a note..."></textarea>
+          </label>
+        </div>
+      </section>
+
       <section class="section" aria-labelledby="integration-title">
         <div class="section-heading">
           <h2 id="integration-title">Native Astro and Vue</h2><p>
@@ -547,7 +643,21 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
             </p>
           </article>
         </div>
-        <div class="vue-surface"><VueBeamDemo client:visible /></div>
+        <div class="framework-demos">
+          <div class="astro-surface">
+            <AstroBorderBeam
+              as="button"
+              class="astro-beam-button"
+              size="md"
+              colorVariant="sunset"
+              inset={3}
+              type="button"
+            >
+              Astro component
+            </AstroBorderBeam>
+          </div>
+          <div class="vue-surface"><VueBeamDemo client:visible /></div>
+        </div>
       </section>
 
       <footer class="footer">
@@ -675,6 +785,27 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
               playground?.update({ theme })
             }
 
+            if (target.matches('[data-beam-switch]')) {
+              const checked = target.getAttribute('aria-checked') !== 'true'
+              target.setAttribute('aria-checked', String(checked))
+              const label = target.querySelector('strong')
+              if (label) label.textContent = checked ? 'On' : 'Off'
+            }
+
+            if (target.dataset.beamStep) {
+              const output =
+                target.parentElement?.querySelector<HTMLOutputElement>(
+                  '[data-beam-number]',
+                )
+              if (output)
+                output.value = String(
+                  Math.max(
+                    0,
+                    Number(output.value) + Number(target.dataset.beamStep),
+                  ),
+                )
+            }
+
             if (target.matches('[data-copy]')) {
               const text = target.parentElement?.querySelector<HTMLElement>(
                 '[data-code]:not([hidden])',
@@ -688,11 +819,13 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
         document.addEventListener(
           'input',
           (event) => {
-            if (
-              !(event.target instanceof HTMLInputElement) ||
-              !event.target.dataset.range
-            )
+            if (!(event.target instanceof HTMLInputElement)) return
+            if (event.target.matches('[data-beam-range]')) {
+              const output = event.target.parentElement?.querySelector('output')
+              if (output) output.value = event.target.value
               return
+            }
+            if (!event.target.dataset.range) return
             const key = event.target.dataset.range
             const value = Number(event.target.value)
             const output =

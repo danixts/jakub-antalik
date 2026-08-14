@@ -4,6 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "@danixts/border-beam": ["../../packages/border-beam/src/index.ts"],
+      "@danixts/border-beam/astro": [
+        "../../packages/border-beam/src/astro/index.ts"
+      ],
       "@danixts/border-beam/vue": [
         "../../packages/border-beam/src/vue/index.ts"
       ]

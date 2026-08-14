@@ -16,6 +16,15 @@ export default defineConfig({
     resolve: {
       alias: [
         {
+          find: '@danixts/border-beam/astro',
+          replacement: fileURLToPath(
+            new URL(
+              '../../packages/border-beam/src/astro/index.ts',
+              import.meta.url,
+            ),
+          ),
+        },
+        {
           find: '@danixts/border-beam/vue',
           replacement: fileURLToPath(
             new URL(

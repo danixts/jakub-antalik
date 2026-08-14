@@ -21,3 +21,94 @@
 [data-beam-bloom] {
   pointer-events: none;
 }
+.astro-beam-button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 0 18px;
+  background: var(--surface-raised);
+  color: var(--text);
+}
+.beam-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.beam-control,
+.beam-switch {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0 14px;
+  background: var(--surface-raised);
+  color: var(--text);
+}
+.beam-control input,
+.beam-control select,
+.beam-control textarea {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+}
+.beam-control select option {
+  background: var(--surface);
+}
+.beam-switch {
+  justify-content: space-between;
+  cursor: pointer;
+}
+.beam-switch span {
+  width: 30px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--line);
+  box-shadow: inset 0 0 0 4px var(--surface);
+}
+.beam-switch[aria-checked='true'] span {
+  background: var(--accent);
+}
+.beam-switch strong {
+  font-size: 0.68rem;
+  font-weight: 560;
+}
+.beam-range input {
+  accent-color: var(--accent);
+}
+.beam-range output,
+.beam-number output {
+  color: var(--muted);
+  font:
+    0.68rem ui-monospace,
+    monospace;
+}
+.beam-number {
+  justify-content: space-between;
+}
+.beam-number button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--text);
+}
+.beam-textarea {
+  min-height: 82px;
+  padding-block: 12px;
+}
+.beam-textarea textarea {
+  min-height: 56px;
+  resize: none;
+}
+@media (max-width: 640px) {
+  .beam-form-grid {
+    grid-template-columns: 1fr;
+    padding-inline: 16px;
+  }
+}

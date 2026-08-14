@@ -4,6 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "@danixts/liquid-gooey": ["../../packages/liquid-gooey/src/index.ts"],
+      "@danixts/liquid-gooey/astro": [
+        "../../packages/liquid-gooey/src/astro/index.ts"
+      ],
       "@danixts/liquid-gooey/vue": [
         "../../packages/liquid-gooey/src/vue/index.ts"
       ]
