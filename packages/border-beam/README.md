@@ -49,7 +49,9 @@ It sets `--beam-tint` on the host, so a stylesheet can hand each surface its own
 without touching the controller:
 
 ```css
-.card { --beam-tint: var(--accent); }
+.card {
+  --beam-tint: var(--accent);
+}
 ```
 
 `strength` multiplies every opacity and now accepts up to `3`, so a beam can be pushed
