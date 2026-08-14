@@ -118,6 +118,7 @@ export function createBorderBeam(
       saturation,
       hueRange,
       theme: resolvedTheme,
+      inset: options.inset,
       hairlineOpacity: themeConfig.hairlineOpacity,
     })
 

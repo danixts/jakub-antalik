@@ -29,6 +29,7 @@ export interface BorderBeamOptions {
   staticColors?: boolean
   duration?: number
   active?: boolean
+  inset?: number
   borderRadius?: number
   brightness?: number
   saturation?: number

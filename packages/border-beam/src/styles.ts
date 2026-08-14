@@ -1979,6 +1979,7 @@ interface GenerateStylesOptions {
   saturation: number
   hueRange: number
   theme: 'dark' | 'light'
+  inset?: number
   /** Opacity of the 1px hairline outline (pulse-outside only). Falls back to 0. */
   hairlineOpacity?: number
 }
@@ -1988,24 +1989,35 @@ interface GenerateStylesOptions {
  */
 export function generateBeamCSS(options: GenerateStylesOptions): string {
   const { size } = options
+  let css: string
 
   if (size === 'line') {
-    return generateLineVariantCSS(options)
+    css = generateLineVariantCSS(options)
+  } else if (size === 'sm') {
+    css = generateSmallVariantCSS(options)
+  } else if (size === 'pulse-inner') {
+    css = generatePulseInnerVariantCSS(options)
+  } else if (size === 'pulse-outside') {
+    css = generatePulseOuterVariantCSS(options)
+  } else {
+    css = generateBorderVariantCSS(options)
   }
 
-  if (size === 'sm') {
-    return generateSmallVariantCSS(options)
-  }
+  const inset = Math.max(0, options.inset ?? 0)
+  if (inset === 0) return css
 
-  if (size === 'pulse-inner') {
-    return generatePulseInnerVariantCSS(options)
-  }
-
-  if (size === 'pulse-outside') {
-    return generatePulseOuterVariantCSS(options)
-  }
-
-  return generateBorderVariantCSS(options)
+  const radius = Math.max(0, options.borderRadius - inset)
+  return `${css}
+[data-beam="${options.id}"][data-active]::before,
+[data-beam="${options.id}"][data-fading]::before,
+[data-beam="${options.id}"][data-active]::after,
+[data-beam="${options.id}"][data-fading]::after,
+[data-beam="${options.id}"] [data-beam-bloom] {
+  inset: ${inset}px !important;
+  border-radius: ${radius}px !important;
+  clip-path: inset(0 round ${radius}px) !important;
+}
+`
 }
 
 function generateSmallVariantCSS(options: GenerateStylesOptions): string {

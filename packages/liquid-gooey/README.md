@@ -42,29 +42,22 @@ Each group owns an isolated SVG surface, observer engine, and item registry. Mul
 
 ```vue
 <script setup lang="ts">
-import { createLiquidGroup } from '@danixts/liquid-gooey'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-
-const groupHost = ref<HTMLElement | null>(null)
-const item = ref<HTMLElement | null>(null)
-let group: ReturnType<typeof createLiquidGroup> | undefined
-
-onMounted(() => {
-  if (!groupHost.value || !item.value) return
-  group = createLiquidGroup(groupHost.value, { fill: '#8b5cf6' })
-  group.add(item.value, { morph: { shape: true } })
-})
-onBeforeUnmount(() => group?.destroy())
+import { LiquidGroup, LiquidItem } from '@danixts/liquid-gooey/vue'
 </script>
 
 <template>
-  <div ref="groupHost"><button ref="item">Action</button></div>
+  <LiquidGroup :blur="8" :contrast="18" fill="#8b5cf6">
+    <LiquidItem as="button" :x="-52" transition="bouncy">One</LiquidItem>
+    <LiquidItem as="button" :x="52" transition="bouncy">Two</LiquidItem>
+  </LiquidGroup>
 </template>
 ```
 
+`LiquidGroup` and `LiquidItem` map reactive props to isolated native controllers and clean them up automatically. Vue remains an optional peer dependency.
+
 ## Astro
 
-Call `createLiquidGroup()` from a processed `<script>`, add descendants after the DOM exists, and destroy the group on `astro:before-swap` when using view transitions.
+Call `createLiquidGroup()` from a processed TypeScript `<script>`, add descendants after the DOM exists, and destroy the group on `astro:before-swap` when using view transitions.
 
 ## Credits
 

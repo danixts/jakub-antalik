@@ -1,6 +1,6 @@
 {
   "name": "@danixts/border-beam",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Framework-free animated border beam for Astro and Vue",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -11,6 +11,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.js",
+      "require": "./dist/vue/index.cjs"
     }
   },
   "files": [
@@ -20,12 +25,21 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap --clean",
+    "build": "tsup src/index.ts src/vue/index.ts --format esm,cjs --dts --sourcemap --clean --external vue",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "tsup": "^8.5.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vue": "^3.5.41"
+  },
+  "peerDependencies": {
+    "vue": ">=3.5.0 <4"
+  },
+  "peerDependenciesMeta": {
+    "vue": {
+      "optional": true
+    }
   },
   "keywords": [
     "astro",

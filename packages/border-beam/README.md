@@ -15,6 +15,7 @@ import { createBorderBeam } from '@danixts/border-beam'
 
 const beam = createBorderBeam(document.querySelector('[data-card]'), {
   size: 'pulse-inner',
+  inset: 6,
   colorVariant: 'ocean',
   theme: 'auto',
   strength: 0.8,
@@ -33,7 +34,7 @@ The host remains your element. The controller adds one decorative layer, support
 - Sizes: `sm`, `md`, `line`, `pulse-inner`, `pulse-outside`
 - Colors: `colorful`, `mono`, `ocean`, `sunset`
 - Themes: `dark`, `light`, `auto`
-- Controls: active state, duration, strength, saturation, brightness, hue range, border radius, and static colors
+- Controls: active state, inset, duration, strength, saturation, brightness, hue range, border radius, and static colors
 
 ## Astro
 
@@ -56,20 +57,17 @@ The host remains your element. The controller adds one decorative layer, support
 
 ```vue
 <script setup lang="ts">
-import { createBorderBeam } from '@danixts/border-beam'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-
-const host = ref<HTMLElement | null>(null)
-let beam: ReturnType<typeof createBorderBeam> | undefined
-
-onMounted(() => {
-  if (host.value) beam = createBorderBeam(host.value, { theme: 'auto' })
-})
-onBeforeUnmount(() => beam?.destroy())
+import { BorderBeam } from '@danixts/border-beam/vue'
 </script>
 
-<template><div ref="host">Content</div></template>
+<template>
+  <BorderBeam as="article" size="pulse-inner" color-variant="ocean" :inset="6">
+    Content
+  </BorderBeam>
+</template>
 ```
+
+Vue is an optional peer dependency. Consumers of only the native controller do not install a framework runtime.
 
 ## Credits
 

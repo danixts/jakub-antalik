@@ -15,7 +15,7 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "build:packages": "npm run build -w @danixts/border-beam && npm run build -w @danixts/liquid-gooey",
-    "build:playgrounds": "npm run build -w @sites/beam-astro && npm run build -w @sites/gooey-vue",
+    "build:playgrounds": "npm run build -w @sites/beam-astro && npm run build -w @sites/gooey-astro",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "npm run typecheck --workspaces --if-present",
@@ -23,10 +23,13 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@astrojs/vue": "^7.0.2",
+    "@vue/test-utils": "^2.4.11",
     "jsdom": "^30.0.1",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "vue": "^3.5.41"
   }
 }

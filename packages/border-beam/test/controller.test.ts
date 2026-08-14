@@ -29,6 +29,11 @@ describe('createBorderBeam', () => {
     beam.update({ strength: 0.8 })
     expect(element.style.getPropertyValue('--beam-strength')).toBe('0.8')
 
+    beam.update({ inset: 8 })
+    expect(document.head.querySelector('style')?.textContent).toContain(
+      'inset: 8px !important',
+    )
+
     beam.destroy()
     expect(element.firstElementChild).toBe(content)
     expect(element.dataset.beam).toBeUndefined()
