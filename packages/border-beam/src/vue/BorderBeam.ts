@@ -40,6 +40,7 @@ export const BorderBeam = defineComponent({
     saturation: Number,
     hueRange: Number,
     strength: Number,
+    tint: String,
   },
   emits: {
     activate: () => true,
@@ -62,6 +63,7 @@ export const BorderBeam = defineComponent({
       saturation: props.saturation,
       hueRange: props.hueRange,
       strength: props.strength,
+      tint: props.tint,
       onActivate: () => emit('activate'),
       onDeactivate: () => emit('deactivate'),
     })
