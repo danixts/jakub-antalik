@@ -34,6 +34,9 @@ export interface BorderBeamOptions {
   brightness?: number
   saturation?: number
   hueRange?: number
+  /** Colour the beam paints itself with; defaults to white on dark, black on light. */
+  tint?: string
+  /** Multiplies every opacity. Above 1 the beam burns brighter, up to 3. */
   strength?: number
   onActivate?: () => void
   onDeactivate?: () => void

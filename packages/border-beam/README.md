@@ -36,6 +36,25 @@ The host remains your element. The controller adds one decorative layer, support
 - Themes: `dark`, `light`, `auto`
 - Controls: active state, inset, duration, strength, saturation, brightness, hue range, border radius, and static colors
 
+## Tint
+
+The beam paints its core white on the dark theme and black on the light one, which no
+filter can recolour. Pass `tint` with any CSS colour to paint it in your own instead:
+
+```ts
+createBorderBeam(card, { size: 'pulse-inner', tint: 'var(--primary)' })
+```
+
+It sets `--beam-tint` on the host, so a stylesheet can hand each surface its own colour
+without touching the controller:
+
+```css
+.card { --beam-tint: var(--accent); }
+```
+
+`strength` multiplies every opacity and now accepts up to `3`, so a beam can be pushed
+past its natural brightness on busy backgrounds.
+
 ## Astro
 
 ```astro

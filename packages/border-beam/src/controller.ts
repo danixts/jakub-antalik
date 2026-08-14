@@ -30,6 +30,9 @@ function resolveTheme(
   return theme === 'auto' ? (media.matches ? 'dark' : 'light') : theme
 }
 
+/** Opacities stay usable well past 1, so the ceiling leaves room to push. */
+const MAX_STRENGTH = 3
+
 export function createBorderBeam(
   element: HTMLElement,
   initialOptions: BorderBeamOptions = {},
@@ -45,6 +48,7 @@ export function createBorderBeam(
   const reducedMotionMedia = windowRef.matchMedia(
     '(prefers-reduced-motion: reduce)',
   )
+  const previousTint = element.style.getPropertyValue('--beam-tint')
   const previousBeam = element.getAttribute('data-beam')
   const previousStrength = element.style.getPropertyValue('--beam-strength')
   let options: BorderBeamOptions = { ...DEFAULT_OPTIONS, ...initialOptions }
@@ -129,8 +133,11 @@ export function createBorderBeam(
     const active = options.active !== false
     element.style.setProperty(
       '--beam-strength',
-      String(Math.max(0, Math.min(1, options.strength ?? 1))),
+      String(Math.max(0, Math.min(MAX_STRENGTH, options.strength ?? 1))),
     )
+
+    if (options.tint) element.style.setProperty('--beam-tint', options.tint)
+    else element.style.removeProperty('--beam-tint')
     element.toggleAttribute('data-active', active)
     element.toggleAttribute('data-paused', active && !visible)
 
@@ -236,6 +243,8 @@ export function createBorderBeam(
       if (previousStrength)
         element.style.setProperty('--beam-strength', previousStrength)
       else element.style.removeProperty('--beam-strength')
+      if (previousTint) element.style.setProperty('--beam-tint', previousTint)
+      else element.style.removeProperty('--beam-tint')
       element.style.removeProperty('--pulse-glow-sx')
       element.style.removeProperty('--pulse-glow-sy')
     },
