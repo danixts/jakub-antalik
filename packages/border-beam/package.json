@@ -1,0 +1,54 @@
+{
+  "name": "@danixts/border-beam",
+  "version": "0.1.0",
+  "description": "Framework-free animated border beam for Astro and Vue",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap --clean",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^6.0.3"
+  },
+  "keywords": [
+    "astro",
+    "vue",
+    "animation",
+    "border",
+    "beam",
+    "framework-agnostic"
+  ],
+  "author": "Jakub Antalik (original), danixts (native port)",
+  "license": "MIT",
+  "homepage": "https://danixts.github.io/jakub-antalik/beam/",
+  "bugs": {
+    "url": "https://github.com/danixts/jakub-antalik/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danixts/jakub-antalik.git",
+    "directory": "packages/border-beam"
+  }
+}
