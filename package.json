@@ -1,0 +1,32 @@
+{
+  "name": "@danixts/jakub-antalik-effects",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@11.16.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=11.5.1"
+  },
+  "workspaces": [
+    "packages/*",
+    "sites/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "build:packages": "npm run build -w @danixts/border-beam && npm run build -w @danixts/liquid-gooey",
+    "build:playgrounds": "npm run build -w @sites/beam-astro && npm run build -w @sites/gooey-vue",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
+  }
+}
