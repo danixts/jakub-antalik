@@ -21,6 +21,11 @@
 [data-beam-bloom] {
   pointer-events: none;
 }
+.inset-specimen {
+  box-shadow:
+    inset 0 0 0 var(--specimen-inset) var(--surface),
+    inset 0 0 0 calc(var(--specimen-inset) + 1px) var(--line);
+}
 .astro-beam-button {
   min-height: 44px;
   border: 1px solid var(--line);
@@ -29,86 +34,285 @@
   background: var(--surface-raised);
   color: var(--text);
 }
-.beam-form-grid {
+.beam-ui-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
-.beam-control,
-.beam-switch {
-  min-height: 52px;
+.beam-ui-example {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+}
+.beam-ui-caption {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 580;
+}
+.beam-ui-caption small {
+  color: var(--muted);
+  font: 0.64rem var(--font-mono);
+  font-weight: 450;
+}
+.beam-ui-control {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 0 14px;
+  border-radius: 12px;
+  padding: 0 12px;
   background: var(--surface-raised);
   color: var(--text);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 100ms ease;
 }
-.beam-control input,
-.beam-control select,
-.beam-control textarea {
+.beam-ui-control:hover {
+  border-color: color-mix(in srgb, var(--text) 20%, var(--line));
+  background: color-mix(in srgb, var(--surface-raised) 92%, var(--accent));
+}
+.beam-ui-control:focus-within {
+  border-color: color-mix(in srgb, var(--accent) 58%, var(--line));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 13%, transparent);
+}
+.beam-ui-control:active {
+  transform: translateY(1px);
+}
+.beam-ui-control input,
+.beam-ui-control select,
+.beam-ui-control textarea {
   width: 100%;
   min-width: 0;
   border: 0;
   outline: 0;
   background: transparent;
   color: var(--text);
+  font: inherit;
 }
-.beam-control select option {
+.beam-ui-control input::placeholder,
+.beam-ui-control textarea::placeholder {
+  color: var(--muted);
+}
+.beam-ui-input > svg,
+.beam-ui-select > svg {
+  width: 16px;
+  flex: 0 0 16px;
+  fill: none;
+  stroke: var(--muted);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+.beam-ui-input kbd {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px 6px;
   background: var(--surface);
+  color: var(--muted);
+  font: 0.62rem var(--font-mono);
 }
-.beam-switch {
-  justify-content: space-between;
+.beam-ui-select select {
+  appearance: none;
   cursor: pointer;
 }
-.beam-switch span {
-  width: 30px;
-  height: 18px;
-  border-radius: 999px;
-  background: var(--line);
-  box-shadow: inset 0 0 0 4px var(--surface);
+.beam-ui-select select option {
+  background: var(--surface);
 }
-.beam-switch[aria-checked='true'] span {
+.beam-ui-status-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
   background: var(--accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 65%, transparent);
 }
-.beam-switch strong {
-  font-size: 0.68rem;
+.beam-ui-inline {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.beam-ui-inline > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.beam-ui-inline strong {
+  color: var(--text);
+  font-size: 0.78rem;
   font-weight: 560;
 }
-.beam-range input {
-  accent-color: var(--accent);
-}
-.beam-range output,
-.beam-number output {
+.beam-ui-inline > div > span {
   color: var(--muted);
-  font:
-    0.68rem ui-monospace,
-    monospace;
+  font-size: 0.68rem;
 }
-.beam-number {
+.beam-ui-switch {
+  width: 44px;
+  height: 26px;
+  flex: 0 0 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+  background: var(--surface-raised);
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+.beam-ui-switch > span {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--muted);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--page) 55%, transparent);
+  transition:
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 160ms ease;
+}
+.beam-ui-switch[aria-checked='true'] {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: color-mix(in srgb, var(--accent) 30%, var(--surface-raised));
+}
+.beam-ui-switch[aria-checked='true'] > span {
+  transform: translateX(18px);
+  background: var(--text);
+}
+.beam-ui-switch:focus-visible,
+.beam-ui-number button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.beam-ui-slider input {
+  height: 20px;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.beam-ui-slider input::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--accent) 0 var(--range-value),
+    var(--line) var(--range-value) 100%
+  );
+}
+.beam-ui-slider input::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  appearance: none;
+  border: 3px solid var(--surface-raised);
+  border-radius: 50%;
+  margin-top: -5px;
+  background: var(--text);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.beam-ui-slider input::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--line);
+}
+.beam-ui-slider input::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+.beam-ui-slider input::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 3px solid var(--surface-raised);
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.beam-ui-slider output,
+.beam-ui-number output {
+  color: var(--muted);
+  font: 0.67rem var(--font-mono);
+}
+.beam-ui-number {
   justify-content: space-between;
 }
-.beam-number button {
+.beam-ui-number button {
   width: 28px;
   height: 28px;
   border: 1px solid var(--line);
-  border-radius: 9px;
+  border-radius: 8px;
   background: var(--surface);
   color: var(--text);
+  cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease,
+    transform 100ms ease;
 }
-.beam-textarea {
-  min-height: 82px;
-  padding-block: 12px;
+.beam-ui-number button:hover {
+  border-color: color-mix(in srgb, var(--accent) 46%, var(--line));
+  background: color-mix(in srgb, var(--surface) 86%, var(--accent));
 }
-.beam-textarea textarea {
-  min-height: 56px;
+.beam-ui-number button:active {
+  transform: scale(0.94);
+}
+.beam-ui-textarea {
+  min-height: 88px;
+  align-items: flex-end;
+  padding-block: 11px;
+}
+.beam-ui-textarea textarea {
+  min-height: 58px;
   resize: none;
 }
+.beam-ui-textarea > span {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font: 0.62rem var(--font-mono);
+}
+@media (prefers-reduced-motion: reduce) {
+  .beam-ui-control,
+  .beam-ui-switch,
+  .beam-ui-switch > span,
+  .beam-ui-number button {
+    transition: none;
+  }
+}
 @media (max-width: 640px) {
-  .beam-form-grid {
+  .beam-ui-grid {
     grid-template-columns: 1fr;
     padding-inline: 16px;
   }
+}
+/* Hallmark · component: form controls · genre: modern-minimal · theme: project tokens
+ * states: default · hover · focus · active · disabled · loading · error · success
+ * contrast: pass
+ */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R5 V4 */
+.beam-ui-control:has(:disabled),
+.beam-ui-switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+.beam-ui-control[data-state='loading'] {
+  cursor: progress;
+  opacity: 0.72;
+}
+.beam-ui-control[data-state='error'] {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 12%, transparent);
+}
+.beam-ui-control[data-state='success'] {
+  border-color: color-mix(in srgb, var(--accent) 65%, var(--line));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 11%, transparent);
 }

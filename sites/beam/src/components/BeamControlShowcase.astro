@@ -1,0 +1,198 @@
+---
+import { BorderBeam } from '@danixts/border-beam/astro'
+---
+
+<div class="beam-ui-grid" data-beam-ui>
+  <article class="beam-ui-example">
+    <div class="beam-ui-caption">
+      <span>Project</span><small>Text input</small>
+    </div>
+    <BorderBeam
+      as="label"
+      class="beam-ui-control beam-ui-input"
+      size="md"
+      colorVariant="ocean"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path>
+      </svg>
+      <input type="search" placeholder="Search projects" />
+      <kbd>⌘ K</kbd>
+    </BorderBeam>
+  </article>
+
+  <article class="beam-ui-example">
+    <div class="beam-ui-caption">
+      <span>Environment</span><small>Select</small>
+    </div>
+    <BorderBeam
+      as="label"
+      class="beam-ui-control beam-ui-select"
+      size="line"
+      colorVariant="mono"
+    >
+      <span class="beam-ui-status-dot" aria-hidden="true"></span>
+      <select aria-label="Environment">
+        <option>Production</option>
+        <option>Staging</option>
+        <option>Development</option>
+      </select>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m8 10 4 4 4-4"></path>
+      </svg>
+    </BorderBeam>
+  </article>
+
+  <article class="beam-ui-example">
+    <div class="beam-ui-caption">
+      <span>Notifications</span><small>Switch</small>
+    </div>
+    <div class="beam-ui-inline">
+      <div>
+        <strong>Deployment alerts</strong>
+        <span data-switch-copy>Disabled</span>
+      </div>
+      <BorderBeam
+        as="button"
+        class="beam-ui-switch"
+        size="sm"
+        colorVariant="sunset"
+        type="button"
+        role="switch"
+        aria-label="Deployment alerts"
+        aria-checked="false"
+        data-ui-switch
+      >
+        <span></span>
+      </BorderBeam>
+    </div>
+  </article>
+
+  <article class="beam-ui-example">
+    <div class="beam-ui-caption">
+      <span>Opacity</span><small>Slider</small>
+    </div>
+    <BorderBeam
+      as="label"
+      class="beam-ui-control beam-ui-slider"
+      size="pulse-inner"
+      colorVariant="ocean"
+    >
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value="64"
+        aria-label="Opacity"
+        data-ui-range
+      />
+      <output>64%</output>
+    </BorderBeam>
+  </article>
+
+  <article class="beam-ui-example">
+    <div class="beam-ui-caption">
+      <span>Seats</span><small>Number input</small>
+    </div>
+    <BorderBeam
+      as="div"
+      class="beam-ui-control beam-ui-number"
+      size="md"
+      colorVariant="colorful"
+    >
+      <button type="button" data-ui-step="-1" aria-label="Remove one seat"
+        >−</button
+      >
+      <output data-ui-number>4</output>
+      <button type="button" data-ui-step="1" aria-label="Add one seat">+</button
+      >
+    </BorderBeam>
+  </article>
+
+  <article class="beam-ui-example">
+    <div class="beam-ui-caption">
+      <span>Notes</span><small>Textarea</small>
+    </div>
+    <BorderBeam
+      as="label"
+      class="beam-ui-control beam-ui-textarea"
+      size="pulse-outside"
+      colorVariant="mono"
+    >
+      <textarea
+        maxlength="120"
+        placeholder="Add a deployment note..."
+        aria-label="Deployment note"
+        data-ui-note></textarea>
+      <span><output data-ui-note-count>0</output>/120</span>
+    </BorderBeam>
+  </article>
+</div>
+
+<script>
+  let showcaseAbort: AbortController | undefined
+
+  const mountShowcase = (): void => {
+    showcaseAbort?.abort()
+    showcaseAbort = new AbortController()
+    const { signal } = showcaseAbort
+
+    document.querySelectorAll<HTMLElement>('[data-beam-ui]').forEach((root) => {
+      const range = root.querySelector<HTMLInputElement>('[data-ui-range]')
+      const rangeOutput = range?.parentElement?.querySelector('output')
+      const syncRange = (): void => {
+        if (!range || !rangeOutput) return
+        rangeOutput.textContent = `${range.value}%`
+        range.style.setProperty('--range-value', `${range.value}%`)
+      }
+      syncRange()
+      range?.addEventListener('input', syncRange, { signal })
+
+      const note = root.querySelector<HTMLTextAreaElement>('[data-ui-note]')
+      const noteCount = root.querySelector<HTMLOutputElement>(
+        '[data-ui-note-count]',
+      )
+      note?.addEventListener(
+        'input',
+        () => {
+          if (noteCount) noteCount.value = String(note.value.length)
+        },
+        { signal },
+      )
+
+      root.addEventListener(
+        'click',
+        (event) => {
+          const target =
+            event.target instanceof Element
+              ? event.target.closest<HTMLButtonElement>('button')
+              : null
+          if (!target) return
+
+          if (target.matches('[data-ui-switch]')) {
+            const checked = target.getAttribute('aria-checked') !== 'true'
+            target.setAttribute('aria-checked', String(checked))
+            const copy = root.querySelector<HTMLElement>('[data-switch-copy]')
+            if (copy) copy.textContent = checked ? 'Enabled' : 'Disabled'
+            return
+          }
+
+          if (!target.dataset.uiStep) return
+          const output =
+            root.querySelector<HTMLOutputElement>('[data-ui-number]')
+          if (!output) return
+          output.value = String(
+            Math.max(1, Number(output.value) + Number(target.dataset.uiStep)),
+          )
+        },
+        { signal },
+      )
+    })
+  }
+
+  mountShowcase()
+  document.addEventListener('astro:page-load', mountShowcase)
+  document.addEventListener('astro:before-swap', () => showcaseAbort?.abort(), {
+    once: true,
+  })
+</script>

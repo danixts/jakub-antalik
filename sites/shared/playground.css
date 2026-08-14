@@ -1,5 +1,7 @@
 :root {
   color-scheme: dark;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --page: #0c0c0d;
   --surface: #111112;
   --surface-raised: #151516;
@@ -10,7 +12,8 @@
   --quiet: #626267;
   --accent: #9f8cff;
   --accent-soft: #282338;
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  --danger: #f87171;
+  font-family: var(--font-sans);
   background: var(--page);
   color: var(--text);
 }
@@ -26,16 +29,19 @@
   --quiet: #9b9b9f;
   --accent: #6651d7;
   --accent-soft: #ece8ff;
+  --danger: #dc2626;
 }
 * {
   box-sizing: border-box;
 }
 html {
+  overflow-x: clip;
   background: var(--page);
 }
 body {
   min-width: 320px;
   margin: 0;
+  overflow-x: clip;
   background: var(--page);
 }
 button,
