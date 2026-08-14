@@ -51,4 +51,17 @@ describe('createBorderBeam', () => {
     expect(second.querySelector('[data-beam-bloom]')).not.toBeNull()
     secondBeam.destroy()
   })
+
+  it('aligns the generated radius with the host surface', () => {
+    const element = document.createElement('button')
+    element.style.borderRadius = '13px'
+    document.body.append(element)
+
+    const beam = createBorderBeam(element, { size: 'md' })
+
+    expect(document.head.querySelector('style')?.textContent).toContain(
+      'border-radius: 13px',
+    )
+    beam.destroy()
+  })
 })

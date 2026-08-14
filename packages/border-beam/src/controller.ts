@@ -65,12 +65,16 @@ export function createBorderBeam(
     )
 
   const detectRadius = (): number | undefined => {
+    const readRadius = (node: HTMLElement): number | undefined => {
+      const radius = Number.parseFloat(
+        node.style.borderTopLeftRadius ||
+          node.style.borderRadius ||
+          windowRef.getComputedStyle(node).borderTopLeftRadius,
+      )
+      return Number.isFinite(radius) && radius > 0 ? radius : undefined
+    }
     const child = contentElement()
-    if (!child) return undefined
-    const radius = Number.parseFloat(
-      windowRef.getComputedStyle(child).borderTopLeftRadius,
-    )
-    return Number.isFinite(radius) && radius > 0 ? radius : undefined
+    return readRadius(element) ?? (child ? readRadius(child) : undefined)
   }
 
   const stopPulse = () => {
