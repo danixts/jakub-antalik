@@ -1,0 +1,274 @@
+---
+import '../styles/global.css'
+
+export const prerender = true
+
+const specimens = [
+  {
+    size: 'sm',
+    color: 'colorful',
+    title: 'Small',
+    copy: 'Compact rotating glow for controls and badges.',
+  },
+  {
+    size: 'md',
+    color: 'ocean',
+    title: 'Medium',
+    copy: 'Balanced beam for cards and featured surfaces.',
+  },
+  {
+    size: 'line',
+    color: 'mono',
+    title: 'Line',
+    copy: 'A focused highlight travelling around the edge.',
+  },
+  {
+    size: 'pulse-inner',
+    color: 'sunset',
+    title: 'Pulse inner',
+    copy: 'A breathing bloom contained inside the surface.',
+  },
+  {
+    size: 'pulse-outside',
+    color: 'colorful',
+    title: 'Pulse outside',
+    copy: 'A soft pulse that expands beyond the boundary.',
+  },
+  {
+    size: 'md',
+    color: 'colorful',
+    title: 'Colorful',
+    copy: 'The full-spectrum original palette.',
+  },
+  {
+    size: 'md',
+    color: 'ocean',
+    title: 'Ocean',
+    copy: 'Cool cyan and indigo for calm interfaces.',
+  },
+  {
+    size: 'md',
+    color: 'sunset',
+    title: 'Sunset',
+    copy: 'Warm amber, coral, and violet tones.',
+  },
+  {
+    size: 'md',
+    color: 'mono',
+    title: 'Mono',
+    copy: 'A restrained neutral beam for quiet surfaces.',
+  },
+] as const
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%238b86ff'/%3E%3Cpath d='M18 17h18c9 0 14 5 14 12 0 5-3 9-8 11l9 7H39l-7-6h-3v6H18V17Zm11 9v7h7c2 0 4-1 4-4s-2-3-4-3h-7Z' fill='white'/%3E%3C/svg%3E"
+    />
+    <meta
+      name="description"
+      content="Every framework-free Border Beam variant running in Astro"
+    />
+    <title>Border Beam playground · Astro</title>
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <p class="eyebrow">Native browser controller · Astro</p>
+        <h1>Light that follows<br />the edge.</h1>
+        <p class="intro">
+          Every size, palette, and theme of the zero-dependency Border Beam
+          port. Astro owns the markup; one native controller owns each
+          decorative layer.
+        </p>
+        <nav aria-label="Project links">
+          <a href="https://www.npmjs.com/package/@danixts/border-beam">npm</a>
+          <a href="https://github.com/danixts/jakub-antalik">GitHub</a>
+          <a href="../gooey/">Liquid Gooey</a>
+        </nav>
+      </header>
+
+      <section class="control-panel" aria-label="Border Beam controls">
+        <div class="control-heading">
+          <span>Live controls</span>
+          <button type="button" data-toggle>Pause all</button>
+        </div>
+        <label>
+          Theme
+          <select data-theme>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="auto">Auto</option>
+          </select>
+        </label>
+        <label>
+          Strength <output data-strength-output>0.85</output>
+          <input
+            data-strength
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            value="0.85"
+          />
+        </label>
+        <label>
+          Duration <output data-duration-output>6s</output>
+          <input
+            data-duration
+            type="range"
+            min="2"
+            max="16"
+            step="1"
+            value="6"
+          />
+        </label>
+        <label class="check-control">
+          <input data-static type="checkbox" /> Static colors
+        </label>
+      </section>
+
+      <div class="section-title">
+        <span>01</span>
+        <h2>Size variants</h2>
+        <p>sm · md · line · pulse-inner · pulse-outside</p>
+      </div>
+      <section class="grid" aria-label="Border Beam size and color variants">
+        {
+          specimens.map((specimen, index) => (
+            <article
+              class="beam-host"
+              data-beam-host
+              data-size={specimen.size}
+              data-color={specimen.color}
+            >
+              <div class="card">
+                <div class="card-meta">
+                  <span>0{index + 1}</span>
+                  <code>{specimen.size}</code>
+                </div>
+                <div>
+                  <p class="palette">{specimen.color}</p>
+                  <h3>{specimen.title}</h3>
+                  <p>{specimen.copy}</p>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </section>
+
+      <section class="api-note">
+        <span>One API</span>
+        <code>createBorderBeam(element, options)</code>
+        <p>
+          Works in an Astro processed script or any Vue lifecycle hook. Every
+          controller can update, pause, resume, and destroy independently.
+        </p>
+      </section>
+
+      <footer>
+        Original effect by
+        <a href="https://github.com/Jakubantalik/Libraries">Jakub Antalik</a>.
+        Independent native port for Astro and Vue.
+      </footer>
+    </main>
+
+    <script>
+      import { createBorderBeam } from '@danixts/border-beam'
+      import type {
+        BorderBeamColorVariant,
+        BorderBeamController,
+        BorderBeamSize,
+        BorderBeamTheme,
+      } from '@danixts/border-beam'
+
+      let controllers: BorderBeamController[] = []
+      let active = true
+
+      function updateAll(
+        options: Parameters<BorderBeamController['update']>[0],
+      ): void {
+        controllers.forEach((controller) => controller.update(options))
+      }
+
+      function mount(): void {
+        controllers.forEach((controller) => controller.destroy())
+        controllers = Array.from(
+          document.querySelectorAll<HTMLElement>('[data-beam-host]'),
+        ).map((element) =>
+          createBorderBeam(element, {
+            size: element.dataset.size as BorderBeamSize,
+            colorVariant: element.dataset.color as BorderBeamColorVariant,
+            theme: 'dark',
+            duration: 6,
+            strength: 0.85,
+          }),
+        )
+
+        document
+          .querySelector<HTMLInputElement>('[data-strength]')
+          ?.addEventListener('input', (event) => {
+            const value = Number(
+              (event.currentTarget as HTMLInputElement).value,
+            )
+            const output = document.querySelector<HTMLOutputElement>(
+              '[data-strength-output]',
+            )
+            if (output) output.value = value.toFixed(2)
+            updateAll({ strength: value })
+          })
+        document
+          .querySelector<HTMLInputElement>('[data-duration]')
+          ?.addEventListener('input', (event) => {
+            const value = Number(
+              (event.currentTarget as HTMLInputElement).value,
+            )
+            const output = document.querySelector<HTMLOutputElement>(
+              '[data-duration-output]',
+            )
+            if (output) output.value = `${value}s`
+            updateAll({ duration: value })
+          })
+        document
+          .querySelector<HTMLSelectElement>('[data-theme]')
+          ?.addEventListener('change', (event) => {
+            const theme = (event.currentTarget as HTMLSelectElement)
+              .value as BorderBeamTheme
+            document.documentElement.dataset.theme = theme
+            updateAll({ theme })
+          })
+        document
+          .querySelector<HTMLInputElement>('[data-static]')
+          ?.addEventListener('change', (event) => {
+            updateAll({
+              staticColors: (event.currentTarget as HTMLInputElement).checked,
+            })
+          })
+        document
+          .querySelector<HTMLButtonElement>('[data-toggle]')
+          ?.addEventListener('click', (event) => {
+            active = !active
+            updateAll({ active })
+            ;(event.currentTarget as HTMLButtonElement).textContent = active
+              ? 'Pause all'
+              : 'Play all'
+          })
+      }
+
+      mount()
+      document.addEventListener(
+        'astro:before-swap',
+        () => {
+          controllers.forEach((controller) => controller.destroy())
+          controllers = []
+        },
+        { once: true },
+      )
+    </script>
+  </body>
+</html>
