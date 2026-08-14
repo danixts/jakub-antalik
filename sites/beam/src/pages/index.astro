@@ -177,50 +177,43 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
           <div class="example-stack">
             <div class="example-cell example-cell--large">
               <div
-                class="beam-host"
+                class="beam-host mock-chat"
                 data-beam-demo
                 data-size="md"
                 data-color="colorful"
               >
-                <div class="mock-chat">
-                  <input
-                    aria-label="Prompt"
-                    placeholder="Build anything..."
-                  /><div class="mock-chat-bottom">
-                    <span class="mock-chip">Agent</span><span class="mock-chip"
-                      >Auto</span
-                    ><button class="mock-action" type="button" aria-label="Send"
-                      >↑</button
-                    >
-                  </div>
+                <input
+                  aria-label="Prompt"
+                  placeholder="Build anything..."
+                /><div class="mock-chat-bottom">
+                  <span class="mock-chip">Agent</span><span class="mock-chip"
+                    >Auto</span
+                  ><button class="mock-action" type="button" aria-label="Send"
+                    >↑</button
+                  >
                 </div>
               </div>
             </div>
             <div class="example-grid">
               <div class="example-cell">
-                <div
-                  class="beam-host"
+                <button
+                  class="beam-host mock-button mock-button--round"
                   data-beam-demo
                   data-size="sm"
                   data-color="sunset"
+                  type="button"
                 >
-                  <button class="mock-button mock-button--round" type="button"
-                    >+</button
-                  >
-                </div>
+                  +
+                </button>
               </div>
               <div class="example-cell">
                 <div
-                  class="beam-host beam-host--wide"
+                  class="beam-host beam-host--wide mock-search-shell"
                   data-beam-demo
                   data-size="line"
                   data-color="ocean"
                 >
-                  <input
-                    class="mock-search"
-                    aria-label="Search"
-                    placeholder="Search components"
-                  />
+                  <input aria-label="Search" placeholder="Search components" />
                 </div>
               </div>
             </div>
@@ -230,42 +223,38 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
           <div class="example-stack">
             <div class="example-cell example-cell--large">
               <div
-                class="beam-host beam-host--card"
+                class="beam-host beam-host--card mock-card"
                 data-beam-demo
                 data-size="pulse-inner"
                 data-color="colorful"
               >
-                <div class="mock-card">
-                  <strong>Generating interface</strong><span
-                    >Building accessible components...</span
-                  >
-                </div>
+                <strong>Generating interface</strong><span
+                  >Building accessible components...</span
+                >
               </div>
             </div>
             <div class="example-grid">
               <div class="example-cell">
-                <div
-                  class="beam-host"
+                <button
+                  class="beam-host mock-button mock-button--pill"
                   data-beam-demo
                   data-size="pulse-inner"
                   data-color="sunset"
+                  type="button"
                 >
-                  <button class="mock-button mock-button--pill" type="button"
-                    >Subscribe</button
-                  >
-                </div>
+                  Subscribe
+                </button>
               </div>
               <div class="example-cell">
-                <div
-                  class="beam-host"
+                <button
+                  class="beam-host mock-button"
                   data-beam-demo
                   data-size="pulse-outside"
                   data-color="ocean"
+                  type="button"
                 >
-                  <button class="mock-button" type="button"
-                    >Create project</button
-                  >
-                </div>
+                  Create project
+                </button>
               </div>
             </div>
           </div>
@@ -274,47 +263,40 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
           <div class="example-stack">
             <div class="example-cell example-cell--large">
               <div
-                class="beam-host beam-host--card"
+                class="beam-host beam-host--card mock-card"
                 data-beam-demo
                 data-size="md"
                 data-color="ocean"
                 data-inset="8"
               >
-                <div class="mock-card">
-                  <strong>Inset surface</strong><span
-                    >The beam follows an inner boundary without changing your
-                    component.</span
-                  >
-                </div>
+                <strong>Inset surface</strong><span
+                  >The beam follows an inner boundary without changing your
+                  component.</span
+                >
               </div>
             </div>
             <div class="example-grid">
               <div class="example-cell">
-                <div
-                  class="beam-host"
+                <button
+                  class="beam-host mock-button mock-button--round"
                   data-beam-demo
                   data-size="sm"
                   data-color="colorful"
                   data-inset="4"
+                  type="button"
                 >
-                  <button class="mock-button mock-button--round" type="button"
-                    >⌘</button
-                  >
-                </div>
+                  ⌘
+                </button>
               </div>
               <div class="example-cell">
                 <div
-                  class="beam-host beam-host--wide"
+                  class="beam-host beam-host--wide mock-search-shell"
                   data-beam-demo
                   data-size="line"
                   data-color="sunset"
                   data-inset="5"
                 >
-                  <input
-                    class="mock-search"
-                    aria-label="Email"
-                    placeholder="name@company.com"
-                  />
+                  <input aria-label="Email" placeholder="name@company.com" />
                 </div>
               </div>
             </div>
@@ -442,16 +424,17 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
         </div>
         <div class="playground-preview">
           <div class="preview-surface">
-            <div class="beam-host beam-host--preview" data-playground-beam>
-              <div class="mock-chat">
-                <input
-                  aria-label="Interactive prompt"
-                  placeholder="Ask the playground..."
-                /><div class="mock-chat-bottom">
-                  <span class="mock-chip">Astro</span><span class="mock-chip"
-                    >TypeScript</span
-                  ><button class="mock-action" type="button">↑</button>
-                </div>
+            <div
+              class="beam-host beam-host--preview mock-chat"
+              data-playground-beam
+            >
+              <input
+                aria-label="Interactive prompt"
+                placeholder="Ask the playground..."
+              /><div class="mock-chat-bottom">
+                <span class="mock-chip">Astro</span><span class="mock-chip"
+                  >TypeScript</span
+                ><button class="mock-action" type="button">↑</button>
               </div>
             </div>
           </div>
@@ -481,24 +464,27 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
               <div>
                 <>
                   <div class="variant-card">
-                    <div
-                      class="beam-host variant-host"
-                      data-beam-demo
-                      data-size={variant.size}
-                      data-color={variant.color}
-                      data-inset={variant.inset}
-                    >
-                      {variant.kind === 'icon' ? (
-                        <button
-                          class="mock-button mock-button--round"
-                          type="button"
-                        >
-                          +
-                        </button>
-                      ) : variant.kind === 'search' ||
-                        variant.kind === 'input' ? (
+                    {variant.kind === 'icon' ? (
+                      <button
+                        class="beam-host variant-host mock-button mock-button--round"
+                        data-beam-demo
+                        data-size={variant.size}
+                        data-color={variant.color}
+                        data-inset={variant.inset}
+                        type="button"
+                      >
+                        +
+                      </button>
+                    ) : variant.kind === 'search' ||
+                      variant.kind === 'input' ? (
+                      <div
+                        class="beam-host variant-host mock-search-shell"
+                        data-beam-demo
+                        data-size={variant.size}
+                        data-color={variant.color}
+                        data-inset={variant.inset}
+                      >
                         <input
-                          class="mock-search"
                           aria-label={variant.label}
                           placeholder={
                             variant.kind === 'search'
@@ -506,23 +492,33 @@ import { BorderBeam } from '@danixts/border-beam/vue'`,
                               : 'Email address'
                           }
                         />
-                      ) : variant.kind === 'card' ? (
-                        <div class="mock-card">
-                          <strong>Minimal card</strong>
-                          <span>Reusable surface</span>
-                        </div>
-                      ) : (
-                        <button
-                          class:list={[
-                            'mock-button',
-                            variant.kind === 'pill' && 'mock-button--pill',
-                          ]}
-                          type="button"
-                        >
-                          {variant.kind === 'pill' ? 'Status' : 'Continue'}
-                        </button>
-                      )}
-                    </div>
+                      </div>
+                    ) : variant.kind === 'card' ? (
+                      <div
+                        class="beam-host variant-host variant-host--card mock-card"
+                        data-beam-demo
+                        data-size={variant.size}
+                        data-color={variant.color}
+                        data-inset={variant.inset}
+                      >
+                        <strong>Minimal card</strong>
+                        <span>Reusable surface</span>
+                      </div>
+                    ) : (
+                      <button
+                        class:list={[
+                          'beam-host variant-host mock-button',
+                          variant.kind === 'pill' && 'mock-button--pill',
+                        ]}
+                        data-beam-demo
+                        data-size={variant.size}
+                        data-color={variant.color}
+                        data-inset={variant.inset}
+                        type="button"
+                      >
+                        {variant.kind === 'pill' ? 'Status' : 'Continue'}
+                      </button>
+                    )}
                   </div>
                   <p class="variant-label">{variant.label}</p>
                 </>

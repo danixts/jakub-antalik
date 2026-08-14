@@ -382,7 +382,8 @@ h1 {
 .mock-chip,
 .mock-action,
 .mock-button,
-.mock-search {
+.mock-search,
+.mock-search-shell {
   border: 1px solid var(--line);
   background: var(--surface-raised);
   color: var(--muted);
@@ -423,6 +424,22 @@ h1 {
   border-radius: 13px;
   padding: 0 14px;
   outline: 0;
+}
+.mock-search-shell {
+  width: min(260px, calc(100% - 32px));
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  border-radius: 13px;
+  padding: 0 14px;
+}
+.mock-search-shell input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
 }
 .mock-card {
   width: min(310px, calc(100% - 32px));

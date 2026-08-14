@@ -1,7 +1,6 @@
 .beam-host {
   display: grid;
   place-items: center;
-  width: fit-content;
   max-width: 100%;
 }
 .beam-host--wide {
@@ -14,9 +13,9 @@
   width: min(440px, calc(100% - 32px));
 }
 .variant-host {
-  width: 100%;
+  max-width: 100%;
 }
-.variant-host .mock-card {
+.variant-host--card {
   width: 100%;
 }
 [data-beam-bloom] {

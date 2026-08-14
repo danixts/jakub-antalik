@@ -162,6 +162,7 @@ const variants = [
                   <button
                     class="liquid-item liquid-item--shape"
                     data-liquid-item
+                    data-liquid-toggle
                     type="button">Morph</button
                   >
                 </div>
@@ -174,11 +175,13 @@ const variants = [
                   <button
                     class="liquid-item liquid-item--small"
                     data-liquid-item
+                    data-liquid-toggle
                     data-x="-38"
                     type="button">All</button
                   ><button
                     class="liquid-item liquid-item--small"
                     data-liquid-item
+                    data-liquid-toggle
                     data-x="38"
                     type="button">New</button
                   >
@@ -212,6 +215,7 @@ const variants = [
                   <button
                     class="liquid-item liquid-item--move"
                     data-liquid-item
+                    data-liquid-toggle
                     type="button">Soft</button
                   >
                 </div>
@@ -224,6 +228,7 @@ const variants = [
                   <button
                     class="liquid-item liquid-item--move"
                     data-liquid-item
+                    data-liquid-toggle
                     type="button">Bounce</button
                   >
                 </div>
@@ -256,6 +261,7 @@ const variants = [
                   <button
                     class="liquid-item liquid-item--dissolve"
                     data-liquid-item
+                    data-liquid-toggle
                     type="button">Soft</button
                   >
                 </div>
@@ -268,6 +274,7 @@ const variants = [
                   <button
                     class="liquid-item liquid-item--dissolve"
                     data-liquid-item
+                    data-liquid-toggle
                     type="button">Gravity</button
                   >
                 </div>
@@ -390,6 +397,7 @@ const variants = [
               <button
                 class="liquid-item liquid-item--preview"
                 data-playground-item
+                data-play-toggle
                 type="button">Astro</button
               >
             </div>
@@ -431,6 +439,7 @@ const variants = [
                             `variant-blob--${variant.family}`,
                           ]}
                           data-liquid-item
+                          data-variant-toggle
                           data-index={index}
                           type="button"
                         >
@@ -491,6 +500,7 @@ const variants = [
       }
 
       let mounted: MountedGroup[] = []
+      const mountedByElement = new Map<HTMLElement, MountedGroup>()
       let playground: MountedGroup | undefined
       let abort: AbortController | undefined
       let effect: PlaygroundEffect = 'morph'
@@ -563,6 +573,7 @@ const variants = [
         mounted.forEach(({ group }) => group.destroy())
         playground?.group.destroy()
         mounted = []
+        mountedByElement.clear()
 
         document
           .querySelectorAll<HTMLElement>('[data-liquid-demo]')
@@ -576,6 +587,7 @@ const variants = [
                   : '#8f7cff',
             })
             mounted.push(entry)
+            mountedByElement.set(element, entry)
             const item = entry.items[0]
             if (kind === 'shape')
               item?.update({ morph: { shape: true, speed: 1.1, bounce: 0.65 } })
@@ -628,6 +640,7 @@ const variants = [
               ),
             )
             mounted.push(entry)
+            mountedByElement.set(element, entry)
           })
 
         const playgroundElement = document.querySelector<HTMLElement>(
@@ -661,6 +674,12 @@ const variants = [
                 .forEach((panel) => {
                   panel.hidden =
                     panel.dataset.familyPanel !== target.dataset.family
+                  if (!panel.hidden)
+                    panel
+                      .querySelectorAll<HTMLElement>('[data-liquid-demo]')
+                      .forEach((element) =>
+                        mountedByElement.get(element)?.group.wake(),
+                      )
                 })
             }
 
@@ -695,10 +714,7 @@ const variants = [
 
             const host = target.closest<HTMLElement>('[data-liquid-demo]')
             if (host && target.matches('[data-liquid-toggle]')) {
-              const index = Array.from(
-                document.querySelectorAll('[data-liquid-demo]'),
-              ).indexOf(host)
-              const entry = mounted[index]
+              const entry = mountedByElement.get(host)
               const isOpen = target.getAttribute('aria-expanded') !== 'false'
               if (host.dataset.liquidDemo === 'morph') {
                 entry?.items.forEach((item, itemIndex) =>
@@ -722,17 +738,52 @@ const variants = [
                 )
                 target.setAttribute('aria-expanded', String(!isOpen))
                 target.textContent = isOpen ? 'Open' : 'Close'
-              } else if (host.dataset.liquidDemo === 'move') {
+              } else if (host.dataset.liquidDemo === 'shape') {
+                const open = target.dataset.open !== 'true'
+                target.classList.toggle('is-wide', open)
+                entry?.items[0]?.update({
+                  scale: open ? 1.05 : 1,
+                  morph: { shape: true, speed: 1.1, bounce: 0.65 },
+                  transition: 'smooth',
+                })
+                entry?.group.wake()
+                target.dataset.open = String(open)
+              } else if (host.dataset.liquidDemo === 'pill') {
+                const open = host.dataset.open === 'false'
+                entry?.items.forEach((item, itemIndex) =>
+                  item.update({
+                    x: open
+                      ? itemIndex === 0
+                        ? -38
+                        : 38
+                      : itemIndex === 0
+                        ? -18
+                        : 18,
+                    delay: itemIndex * 24,
+                    transition: 'bouncy',
+                  }),
+                )
+                host
+                  .querySelectorAll<HTMLElement>('[data-liquid-toggle]')
+                  .forEach((item) => (item.dataset.open = String(open)))
+                host.dataset.open = String(open)
+              } else if (host.dataset.liquidDemo?.startsWith('move')) {
+                const distance = host.dataset.liquidDemo === 'move' ? 86 : 52
                 entry?.items[0]?.update({
                   effect: 'move',
-                  x: target.dataset.open === 'true' ? -86 : 86,
+                  x: target.dataset.open === 'true' ? -distance : distance,
                   transition: 'bouncy',
                 })
                 target.dataset.open = String(target.dataset.open !== 'true')
-              } else if (host.dataset.liquidDemo === 'dissolve') {
+              } else if (host.dataset.liquidDemo?.startsWith('dissolve')) {
                 const open = target.dataset.open !== 'true'
                 entry?.items[0]?.update({
-                  x: open ? 78 : -78,
+                  x:
+                    host.dataset.liquidDemo === 'dissolve'
+                      ? open
+                        ? 78
+                        : -78
+                      : 0,
                   scale: open ? 0.7 : 1,
                   dissolve: {
                     active: true,
@@ -744,6 +795,38 @@ const variants = [
                 })
                 target.dataset.open = String(open)
               }
+            }
+
+            const variantHost = target.closest<HTMLElement>(
+              '[data-variant-liquid]',
+            )
+            if (variantHost && target.matches('[data-variant-toggle]')) {
+              const entry = mountedByElement.get(variantHost)
+              const family = variantHost.dataset.family as PlaygroundEffect
+              const open = variantHost.dataset.open !== 'true'
+              entry?.items.forEach((item, itemIndex) => {
+                if (family === 'move')
+                  item.update({
+                    effect: 'move',
+                    x: open ? 28 : -28,
+                    transition: 'bouncy',
+                  })
+                else if (family === 'dissolve')
+                  item.update({
+                    scale: open ? 0.7 : 1,
+                    dissolve: { active: true, strength: open ? 1 : 0.35 },
+                    transition: 'smooth',
+                  })
+                else
+                  item.update({
+                    x: open
+                      ? (itemIndex - (entry.items.length - 1) / 2) * 12
+                      : (itemIndex - (entry.items.length - 1) / 2) * 36,
+                    delay: itemIndex * 22,
+                    transition: 'bouncy',
+                  })
+              })
+              variantHost.dataset.open = String(open)
             }
 
             if (target.matches('[data-play-toggle]')) {
